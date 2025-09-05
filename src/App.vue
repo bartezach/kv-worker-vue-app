@@ -1,108 +1,19 @@
 <template>
   <div>
-    <h1>Platform Rollouts</h1>
-
-    <!-- Error message -->
-    <div v-if="errorMessage" style="color: red; font-weight: bold;">
-      {{ errorMessage }}
-    </div>
-
-    <div v-if="isLoading" class="loader"></div>
-
-    <table v-if="!isLoading">
-      <thead>
-        <tr>
-          <th>Platform</th>
-          <th>Rollout %</th>
-          <th>Comment</th>
-          <th>Update</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(entry, key) in kvData" :key="key">
-          <td><input type="text" v-model="entry.platform" readonly /></td>
-          <td>
-            <input type="number" v-model.number="entry.rollout" min="0" max="100" />
-          </td>
-          <td>
-            <textarea v-model="entry.comment" rows="2"></textarea>
-          </td>
-          <td class="update-cell">
-            <button @click="updateEntry(key, entry)">Update</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <h1>Player Config Manager</h1>
+    <RolloutTable />
+    <WhitelistTable />
   </div>
 </template>
 
 <script>
+import RolloutTable from "./components/RolloutTable.vue";
+import WhitelistTable from "./components/WhitelistTable.vue";
+
 export default {
-  data() {
-    return {
-      kvData: {},
-      errorMessage: "",
-      isLoading: false
-    };
-  },
-  mounted() {
-    this.fetchData();
-  },
-  methods: {
-    async fetchData() {
-      this.errorMessage = "";
-      this.isLoading = true;
-      try {
-        const res = await fetch("https://www.rte.ie/dev/player_rollouts/");
-        if (!res.ok) throw new Error(`GET failed: ${res.statusText}`);
-        const data = await res.json();
-        this.kvData = {};
-
-        // Convert KV entries to table
-        for (const [key, value] of Object.entries(data.message)) {
-          this.kvData[key] = {
-            platform: key,
-            rollout: value.rollout ? value.rollout * 100 : 0,
-            comment: value.comment || ""
-          };
-        }
-      } catch (err) {
-        this.errorMessage = err.message;
-      } finally {
-        this.isLoading = false;
-      }
-    },
-
-    async updateEntry(key, entry) {
-      this.errorMessage = "";
-
-      // Validate rollout value
-      if (entry.rollout === null || entry.rollout < 0 || entry.rollout > 100) {
-        this.errorMessage = "Rollout % must be between 0 and 100.";
-        return;
-      }
-
-      try {
-        const body = {
-          key,
-          value: {
-            rollout: String(entry.rollout / 100), // Store as 0–1
-            comment: entry.comment
-          }
-        };
-
-        const res = await fetch("https://www.rte.ie/dev/player_rollouts/", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
-        });
-
-        if (!res.ok) throw new Error(`POST failed: ${res.statusText}`);
-        await this.fetchData(); // Refresh table
-      } catch (err) {
-        this.errorMessage = err.message;
-      }
-    }
+  components: {
+    RolloutTable,
+    WhitelistTable
   }
 };
 </script>
@@ -136,6 +47,7 @@ table {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
 }
 
 th {
@@ -187,10 +99,10 @@ button:hover {
 }
 
 .update-cell {
-  text-align: center; /* simpler than flexbox */
+  text-align: center;
 }
 
-/* Spinner styles */
+/* Spinner */
 .loader {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #3498db;

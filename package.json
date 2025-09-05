@@ -12,6 +12,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "ip-cidr": "^4.0.2",
+    "range_check": "^4.1.0",
+    "uuid": "^11.1.0",
     "vue": "^3.5.18"
   },
   "devDependencies": {
