@@ -19,6 +19,10 @@ export default {
 </script>
 
 <style>
+.app-container {
+  padding: 20px;
+}
+
 h1 {
   font-family: 'Segoe UI', 'Roboto', 'Open Sans', Arial, sans-serif;
   font-size: 2rem;
@@ -39,6 +43,22 @@ h1::after {
   border-radius: 2px;
 }
 
+h2 {
+  font-family: 'Segoe UI', 'Roboto', 'Open Sans', Arial, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-family: 'Segoe UI', 'Roboto', 'Open Sans', Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -51,14 +71,17 @@ table {
 }
 
 th {
+  font-family: 'Segoe UI', 'Roboto', 'Open Sans', Arial, sans-serif;
+  font-size: 1rem;
   background-color: #4CAF50;
   color: white;
-  padding: 12px;
+  padding: 14px 12px;
   text-align: left;
 }
 
 th, td {
-  padding: 8px;
+  padding: 12px 12px;
+  line-height: 1.6;
   border: 1px solid #ccc;
   vertical-align: middle;
 }
